@@ -13,9 +13,10 @@ if ($older_than_toot !== "") {
 } else {
   $extra = "";
 }
+$id = "";
 $fetched = [];
 
-while (count($fetched) < $limit ) {
+while ($id !== "" && count($fetched) < $limit ) {
   $r = json_decode(file_get_contents("$instance/api/v1/timelines/public?local=true" . $extra), true);
   foreach($r as $item) {
     $id = $item['id'];
@@ -30,7 +31,12 @@ while (count($fetched) < $limit ) {
 
     $fetched[] = $id;
   }
+  if ($id == "") {
+    echo "Toots ended."
+  } else {
+    echo "Fetched " . count($fetched) . " toots. Last fetched toot ID - $id" . PHP_EOL;
+  }
   // older than
   $extra = "&max_id=" . $id;
 }
-echo "Fetched " . count($fetched) . " toots.";
+echo "Fetched " . count($fetched) . " toots." . PHP_EOL;
